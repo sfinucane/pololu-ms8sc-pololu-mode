@@ -24,23 +24,16 @@ int CwPololuSerialServo::setPosition(
 				unsigned short int servo_number,
 				unsigned short int position
 	) {
-	unsigned char cmd[6]; // need enough for 8-bit version
+	unsigned char cmd[6];
 	if( !CwPololuSerialServo::isValidServoId(servo_number) ) return -2;
 	cmd[0] = 0x80; // start byte
 	cmd[1] = 0x01; // device id
+	cmd[2] = 0x03; // command (8-bit version)
 	cmd[3] = lowByte(servo_number);
-	if( position > 127 ) { // 8-bit version
-		cmd[2] = 0x03; // command
-		cmd[4] = 0x01;
-		cmd[5] = lowByte((0x7f & position)); // bitmask: 0111_1111 = 7f
-		_serial->write( cmd, 6 );
-		_serial->flush();
-	} else { // 7-bit version
-		cmd[2] = 0x2; // command
-		cmd[4] = lowByte(position);
-		_serial->write( cmd, 5 );
-		_serial->flush();
-	}
+	cmd[4] = lowByte(position >> 7);
+	cmd[5] = lowByte((0x7f & position)); // bitmask: 0111_1111 = 7f
+	_serial->write( cmd, 6 );
+	_serial->flush();
 	return 0;
 }
 

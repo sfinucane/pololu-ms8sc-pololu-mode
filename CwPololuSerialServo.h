@@ -61,9 +61,7 @@ class CwPololuSerialServo {
 		/** Set Position
 		 *
 		 * Places a servo into a specific position.
-		 * This command will automatically extend to the 2-data byte mode if you pass in values greater
-		 * than 127. This automatically takes care of forward/reverseand the
-		 * neutral position settings set previously.
+		 * This command uses the 2-byte mode (8-bit position data).
 		 *
 		 * Arguments:
 		 *  server_number: (unsigned short int) specifies which servo ID to set. Valid range from 0-127
